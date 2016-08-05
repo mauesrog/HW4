@@ -1,7 +1,154 @@
 body {
   font-family: "Roboto", sans-serif;
   color: rgb(10%, 10%, 10%);
-  background: darken(white, 10%);
-  margin: 50px;
+  background: white;
+  margin: 0;
   font-size: 16px;
+}
+
+div#allNav {
+  width: 100%;
+  height: 200px;
+
+  &.shrink {
+    div#fakeHeader a {
+      opacity: 0;
+    }
+
+    div#navWrapper {
+      pointer-events: all;
+      opacity: 1;
+    }
+
+    &.wayDown {
+      div#navWrapper {
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.6);
+      }
+    }
+  }
+
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    width: 50%;
+    background: none;
+    color: white;
+    border: none;
+    text-decoration: none;
+    text-shadow: 1px 1px #000;
+  }
+
+  a:hover {
+    text-shadow: 3px 3px #000;
+  }
+
+  div#fakeHeader{
+    height: 100%;
+    width: 100%;
+    background: #00897B;
+    display: flex;
+
+    a {
+      padding-top: 50px;
+      font-size: 2.8em;
+    }
+  }
+
+  div#navWrapper{
+    pointer-events: none;
+    opacity: 0;
+    width: 100%;
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    nav {
+      background: #00897B;
+      height: 100%;
+      width: 100%;
+      display: flex;
+
+      a {
+        font-size: 2em;
+      }
+    }
+  }
+}
+div.index {
+  margin: 100px;
+  height: 900px;
+
+  div.index-header {
+    height: 80px;
+    display: flex;
+    color: #00897B;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      font-size: 2.5em;
+      width: 80%;
+      color: #00897B;
+    }
+  }
+
+  div#posts {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+
+    div#post-title {
+      color: #00897B;
+      display: flex;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      i {
+        text-align: right;
+        font-size: 2em;
+        width: 5%;
+      }
+
+      input[type="text"] {
+        width: 95%;
+        height: 65px;
+        background: none;
+        opacity: 1;
+        font-size: 2em;
+        border: 0;
+        font-weight: lighter;
+
+        &:focus {
+          color: rgba(0, 137, 123, 0.5);
+
+          &::placeholder {
+              color: rgba(0, 137, 123, 0.5);
+          }
+        }
+      }
+
+      div#post-body {
+        opacity: 0;
+        width: 100%;
+        height: 0;
+        background: darken(white, 2%);
+        box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.7);
+        border-radius: 5px;
+      }
+
+      div.expanded +#post-body {
+        opacity: 1;
+        height: 300px;
+      }
+    }
+  }
+}
+
+::placeholder {
+    color: #00897B;
 }
