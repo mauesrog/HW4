@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import IndexPost from './index-post.js';
-import { fetchPosts, createPost, updatePost } from '../actions';
+import { fetchPosts, createPost, updatePost, deletePost, fetchPost } from '../actions';
 
 const mapStateToProps = (state) => (
   {
@@ -9,6 +9,7 @@ const mapStateToProps = (state) => (
     validated: state.posts.validated,
     message: state.posts.message,
     updated: state.posts.updated,
+    post: state.posts.post,
   }
 );
 // example class based component (smart component)
@@ -17,12 +18,16 @@ class Index extends Component {
     super(props);
 
     // init component state here
-    this.state = {};
+    this.state = {
+      editContentClass: 'post-body',
+      enter: false,
+    };
 
     this.createNewPost = this.createNewPost.bind(this);
     this.getPosts = this.getPosts.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
-    this.onExpandPost = this.onExpandPost.bind(this);
+    this.onEditContent = this.onEditContent.bind(this);
+    this.onGetDataPost = this.onGetDataPost.bind(this);
   }
 
   componentDidMount() {
@@ -32,16 +37,42 @@ class Index extends Component {
   onKeyDown(id, event) {
     if (event.keyCode === 13) {
       const title = event.target.value;
-
       event.target.blur();
 
+      this.setState({ enter: true });
       this.props.updatePost(id, { title });
     }
   }
 
-  onExpandPost(id, event) {
-    console.log(event);
-    event.target.blur();
+  onEditContent(id, event) {
+    event.stopPropagation();
+
+    const currentPost = document.getElementById(`post-body-${id}`);
+    const state = { editContentClass: 'post-body' };
+
+    this.props.fetchPost(id);
+
+    if (this.state.editContentClass.indexOf('editing') < 0) {
+      state.editContentClass += ' editing';
+      currentPost.focus();
+    } else {
+      currentPost.blur();
+      this.props.updatePost(id, { content: currentPost.value });
+    }
+
+    this.setState(state);
+  }
+
+  onGetDataPost(id, event, extended) {
+    if (extended) {
+      document.getElementById(`post-body-${id}`).blur();
+
+      this.setState({
+        editContentClass: 'post-body',
+      });
+    }
+
+    this.props.fetchPost(id);
   }
 
   getPosts() {
@@ -49,21 +80,19 @@ class Index extends Component {
       return (
         <div id="posts">
           {this.props.all.map((el, i, arr) => {
-            let autofocus;
-
-            if (i === arr.length - 1 && !this.props.updated) {
-              autofocus = true;
-            } else {
-              autofocus = false;
-            }
+            const autofocus = (i === arr.length - 1 && !this.props.updated);
 
             return (
               < IndexPost
-                autofocus={autofocus}
+                autoFocus={autofocus}
+                editContentClass={this.state.editContentClass}
                 key={el.id}
                 id={el.id}
                 title={el.title}
-                onExpandPost={this.onExpandPost}
+                deletePost={this.props.deletePost}
+                currentPost={this.props.post}
+                onEditContent={this.onEditContent}
+                getDataPost={this.onGetDataPost}
                 onKeyDown={this.onKeyDown}
               />
             );
@@ -81,7 +110,7 @@ class Index extends Component {
     this.props.createPost({
       title: 'New post',
       tags: 'Customize data',
-      content: 'What',
+      content: '',
     });
   }
 
@@ -90,7 +119,7 @@ class Index extends Component {
       <div className="index">
         <div className="index-header">
           <h1>Posts</h1>
-          <i onClick={this.createNewPost} className="fa fa-plus" aria-hidden="true"></i>
+          <i onClick={this.createNewPost} className="fa fa-plus" aria-hidden="true" />
         </div>
         {this.getPosts()}
       </div>
@@ -98,4 +127,4 @@ class Index extends Component {
   }
 }
 
-export default connect(mapStateToProps, { createPost, fetchPosts, updatePost })(Index);
+export default connect(mapStateToProps, { createPost, fetchPosts, updatePost, deletePost, fetchPost })(Index);
