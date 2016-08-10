@@ -7,7 +7,9 @@ class App extends Component {
     super(props);
 
     // init component state here
-    this.state = {};
+    this.state = {
+      currentId: '',
+    };
   }
 
   render() {

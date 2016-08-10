@@ -5,13 +5,14 @@ const defualtPosts = {
   post: null,
   validated: false,
   message: '',
+  updated: false,
+  error: null,
 };
 
 function PostsReducer(state = defualtPosts, action) {
   switch (action.type) {
     case ActionTypes.FETCH_POST:
       if (action.payload) {
-        console.log(state);
         return Object.assign({}, state, {
           post: action.payload.post,
         });
@@ -30,7 +31,21 @@ function PostsReducer(state = defualtPosts, action) {
 
       return state;
     case ActionTypes.CREATE_POST:
+      if (action.error) {
+        return Object.assign({}, state, {
+          error: action.error,
+        });
+      }
       return state;
+
+    case ActionTypes.UPDATE_POST:
+      return Object.assign({}, state, {
+        updated: true,
+      });
+
+    case ActionTypes.CLEAR_POSTS:
+      return state;
+
     default:
       return state;
   }

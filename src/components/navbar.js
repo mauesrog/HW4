@@ -22,20 +22,37 @@ class NavBar extends Component {
   }
 
   checkScroll(event) {
-    const scrollTop = document.getElementsByTagName('body')[0].scrollTop;
-    let allNavClass;
+    const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 
-    if (scrollTop > 30) {
-      allNavClass = 'shrink';
+    if (document.getElementById('mask').className === 'active') {
+      event.preventDefault();
+      event.stopPropagation();
 
-      if (scrollTop > 129) {
-        allNavClass += ' wayDown';
-      }
+      window.onwheel = (e) => e.preventDefault(); // modern standard
+      window.onmousewheel = document.onmousewheel = (e) => e.preventDefault(); // older browsers, IE
+      window.ontouchmove = (e) => e.preventDefault(); // mobile
+      document.onkeydown = (e) => { if (keys[e.keyCode]) { e.preventDefault(); } };
     } else {
-      allNavClass = '';
-    }
+      const scrollTop = document.getElementsByTagName('body')[0].scrollTop;
+      let allNavClass;
 
-    this.setState({ allNavClass });
+      window.onmousewheel = document.onmousewheel = null;
+      window.onwheel = null;
+      window.ontouchmove = null;
+      document.onkeydown = null;
+
+      if (scrollTop > 30) {
+        allNavClass = 'shrink';
+
+        if (scrollTop > 129) {
+          allNavClass += ' wayDown';
+        }
+      } else {
+        allNavClass = '';
+      }
+
+      this.setState({ allNavClass });
+    }
   }
 
   render() {
@@ -43,12 +60,12 @@ class NavBar extends Component {
       <div id="allNav" className={this.state.allNavClass}>
         <div id="fakeHeader">
           <Link to="/">{"Maui's Blog"}</Link>
-          <Link to="posts/new">New post</Link>
+          <Link to="/posts/new">New post</Link>
         </div>
         <div id="navWrapper">
           <nav>
             <Link to="/">{"Maui's Blog"}</Link>
-            <Link to="posts/new">New post</Link>
+            <Link to="/posts/new">New post</Link>
           </nav>
         </div>
       </div>
