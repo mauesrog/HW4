@@ -121,7 +121,13 @@ class Index extends Component {
   }
 
   onExpandedPost(expandedPostId) {
-    this.setState({ expandedPostId });
+    const state = { expandedPostId };
+
+    if (!expandedPostId) {
+      state.currentTags = [];
+    }
+
+    this.setState(state);
   }
 
   getPosts() {

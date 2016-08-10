@@ -378,3 +378,228 @@ div.index {
 ::placeholder {
     color: #00897B;
 }
+
+@media only screen and (max-width: 640px) {
+  body {
+    font-size: 16px;
+  }
+
+  div#allNav {
+    height: 100px;
+
+    &.shrink.wayDown div#navWrapper {
+      box-shadow: none;
+    }
+
+    a {
+      font-size: 2em;
+    }
+
+    div#fakeHeader{
+      display: none;
+
+      a {
+        padding-top: 0;
+        font-size: 2em;
+      }
+    }
+
+    div#navWrapper{
+      opacity: 1;
+      pointer-events: all;
+      height: 100px;
+
+      nav a {
+        font-size: 2em;
+      }
+    }
+  }
+
+  div.index {
+    margin: 0;
+
+    h1 {
+      margin: 0px 20px 0px 20px;
+      font-size: 2em;
+    }
+
+    div#mask {
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      position: fixed;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      div#hashtag-prompt {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        background: white;
+        color: #00897B;
+        width: 300px;
+        height: 200px;
+        border-radius: 5px;
+
+        div#icons {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          i {
+          width: 40px;
+          text-align: center;
+
+          &:hover {
+            text-shadow: 1px 1px #000;
+          }
+        }
+        }
+
+        div#actual-prompt {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          text-align: center;
+          height: 80%;
+          width: 80%;
+
+          div#headings {
+            h1, h4 {
+              margin: 0;
+            }
+          }
+
+          textarea{
+            outline-color: #00897B;
+            border-color: #00897B;
+            resize: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-weight: lighter;
+            height: 50%;
+          }
+        }
+      }
+    }
+
+    div.index-header {
+      margin: 0px 20px 0px 20px;
+
+      h1 {
+        font-size: 2em;
+      }
+    }
+
+    div#posts {
+      margin: 0;
+
+      div.post-title {
+        div#post-wrapper{
+          margin: 0px 20px 0px 20px;
+          justify-content: center;
+
+          div#icons {
+            margin: 0;
+            margin-right: 20px;
+            justify-content: flex-end;
+            align-items: center;
+            width: 10%;
+
+            i {
+              text-align: center;
+              font-size: 1.7em;
+              width: 25%;
+
+              &.fa-angle-down {
+                text-align: right;
+              }
+
+              &:not(.fa-angle-down) {
+                opacity: 0;
+                width: 0;
+              }
+
+              &:hover:not(.fa-angle-down) {
+                font-size: 2.2em;
+              }
+            }
+          }
+
+          input[type="text"] {
+            width: 90%;
+            font-size: 1.7em;
+            height: 50px;
+
+            &.focused {
+              border-radius: 0px;
+            }
+          }
+
+          &.expanded {
+            margin: 0;
+            justify-content: space-between;
+
+            div#icons{
+              margin-right: 0;
+              justify-content: center;
+              width: 33%;
+
+              i:not(.fa-angle-down) {
+                  width: 25%;
+              }
+            }
+
+            input[type="text"] {
+              width: 63%;
+            }
+
+            +div#full-post {
+              textarea.post-body {
+                height: 200px;
+                border-radius: 0;
+                border-left-style: none;
+                border-right-style: none;
+              }
+
+              ul {
+                margin: 0px 20px 0px 10px;
+              }
+            }
+          }
+        }
+        textarea.post-body {
+          font-size: 1.6em;
+        }
+
+        ul {
+          padding: 0;
+          width: 100%;
+          display: none;
+          list-style: none;
+
+          li {
+            &.tags {
+              color: red;
+            }
+            &:not(.tags){
+              &:hover {
+                text-shadow: 1px 1px #000;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
