@@ -5,10 +5,14 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { Router, browserHistory } from 'react-router';
 import routes from './routes';
 import thunk from 'redux-thunk';
+import dotenv from 'dotenv';
 
 import './style.scss';
 
 import reducers from './reducers';
+
+dotenv.config({ silent: true });
+
 
 const store = createStore(reducers, {}, compose(
   applyMiddleware(thunk),
