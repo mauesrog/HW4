@@ -34,6 +34,7 @@ class Index extends Component {
       expandedPostId: '',
       enter: false,
       initialMessage: 'Loading posts...',
+      popUpClass: 'off',
     };
 
     this.createNewPost = this.createNewPost.bind(this);
@@ -51,8 +52,27 @@ class Index extends Component {
 
   componentWillReceiveProps(props) {
     if (props.routes[1] && props.routes[1].path) {
-      this.createNewPost();
+      const path = props.routes[1].path;
+
+      if (path === '/posts/new') {
+        this.createNewPost();
+      } else {
+        if (localStorage.token) {
+          localStorage.removeItem('token');
+
+          if (localStorage.signup) {
+            localStorage.removeItem('signup');
+          }
+        }
+      }
+
       this.props.history.push('/');
+    }
+  }
+
+  componentWillUnmount() {
+    if (localStorage.signup) {
+      localStorage.removeItem('signup');
     }
   }
 
@@ -133,7 +153,7 @@ class Index extends Component {
   getPosts() {
     if (this.props.validated) {
       return (
-        <div id="posts">
+        <div className="container-content" id="posts">
           {this.props.all.map((el, i, arr) => {
             const autofocus = (i === arr.length - 1 && !this.props.updated);
 
@@ -214,8 +234,8 @@ class Index extends Component {
 
   render() {
     return (
-      <div className="index">
-        <div className="index-header">
+      <div className="main-container" id="index">
+        <div className="container-header">
           <h1>Posts</h1>
           <div id="icons">
             <i
@@ -255,6 +275,10 @@ class Index extends Component {
               <textarea value={this.state.currentHashtags !== null ? this.state.currentHashtags : this.convertHashtags()} onChange={e => { this.setState({ currentHashtags: e.target.value }); }} />
             </div>
           </div>
+        </div>
+        <div id="pop-up" className={localStorage.signup ? '' : this.state.popUpClass}>
+          <h1>{localStorage.signup ? localStorage.signup : ''}</h1>
+          <i className="fa fa-times" aria-hidden="true" onClick={() => { localStorage.removeItem('signup'); this.setState({ popUpClass: 'off' }); }} />
         </div>
       </div>
     );

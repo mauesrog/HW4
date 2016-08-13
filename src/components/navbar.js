@@ -66,6 +66,9 @@ class NavBar extends Component {
           <nav>
             <Link to="/">{"Maui's Blog"}</Link>
             <Link to="/posts/new">New post</Link>
+            <Link to="/signin">Sign in</Link>
+            <Link to="/signup">Sign up</Link>
+            <Link to="/signout">Sign out</Link>
           </nav>
         </div>
       </div>

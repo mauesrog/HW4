@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const ROOT_URL = 'https://maui-blog.herokuapp.com/api';
-const API_KEY = '?key=m_esquivelrogel';
+const ROOT_URL = 'https://maui-blog-auth.herokuapp.com/api';
+// const ROOT_URL = 'http://localhost:9090/api';
+const API_KEY = '?key=ha8f7an2387rh210fb10fbpq3bfa913r8';
 
 export const ActionTypes = {
   FETCH_POSTS: 'FETCH_POSTS',
@@ -10,7 +11,13 @@ export const ActionTypes = {
   UPDATE_POST: 'UPDATE_POST',
   DELETE_POST: 'DELETE_POST',
   CLEAR_POSTS: 'CLEAR_POSTS',
+  AUTH_USER: 'AUTH_USER',
+  DEAUTH_USER: 'DEAUTH_USER',
+  AUTH_ERROR: 'AUTH_ERROR',
+  CLEAR_ERR: 'CLEAR_ERR',
 };
+
+// POST ACTIONS
 
 export function fetchPosts(updated) {
   return (dispatch) => {
@@ -113,5 +120,64 @@ export function clearPosts() {
     .catch(error => {
       console.log(error);
     });
+  };
+}
+
+// USER ACTIONS
+
+export function fetchUserData(id) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/posts/${id}${API_KEY}`)
+    .then(response => {
+      const payload = {
+        user: null,
+      };
+
+      if (response.data) {
+        payload.user = response.user;
+      }
+
+      dispatch({ type: ActionTypes.FETCH_USER_DATA, payload });
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  };
+}
+
+
+export function signupUser(user) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/signup`, user)
+    .then(response => {
+      console.log(response);
+      if (response.data.error) {
+        dispatch(authError(`Sign Up Failed: ${response.data.error.errmsg}`));
+      } else {
+        const token = response.data.token;
+
+        localStorage.setItem('token', token);
+        console.log(token);
+        dispatch({ type: ActionTypes.AUTH_USER });
+      }
+    })
+    .catch(error => {
+      dispatch(authError(`Sign Up Failed: ${error}`));
+    });
+  };
+}
+
+export function clearError() {
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.CLEAR_ERR });
+  };
+}
+
+// trigger to deauth if there is error
+// can also use in your error reducer if you have one to display an error message
+export function authError(error) {
+  return {
+    type: ActionTypes.AUTH_ERROR,
+    message: error,
   };
 }

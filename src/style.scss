@@ -83,7 +83,7 @@ div#allNav {
   }
 }
 
-div.index {
+div.main-container {
   margin: 100px;
   height: 100%;
 
@@ -104,8 +104,52 @@ div.index {
       opacity: 1;
       pointer-events: all;
     }
+  }
 
-    div#hashtag-prompt {
+  div.container-header {
+    height: 80px;
+    display: flex;
+    color: #00897B;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      font-size: 2.5em;
+      width: 80%;
+      color: #00897B;
+    }
+
+    div#icons {
+      display: flex;
+      justify-content: space-between;
+      width: 100px;
+
+      i {
+        font-size: 2em;
+        text-align: center;
+      }
+    }
+  }
+
+  .container-content {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 100px;
+
+    input[type="text"], input[type="password"] {
+      color: #00897B;
+      text-indent: 0.3em;
+      width: 80%;
+      height: 65px;
+      background: none;
+      opacity: 1;
+      font-size: 2em;
+      font-weight: lighter;
+    }
+  }
+
+  &#index {
+    div#mask div#hashtag-prompt {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
@@ -155,217 +199,306 @@ div.index {
         }
       }
     }
-  }
 
-  div.index-header {
-    height: 80px;
-    display: flex;
-    color: #00897B;
-    justify-content: space-between;
-    align-items: center;
+    div#posts {
+      div.post-title {
+        color: #00897B;
+        display: flex;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
 
-    h1 {
-      font-size: 2.5em;
-      width: 80%;
-      color: #00897B;
+        a {
+          color: #00897B;
+          border: none;
+          text-decoration: none;
+          background: none;
+        }
+
+        div#post-wrapper{
+          display: flex;
+
+          div#icons {
+            width: 20%;
+            display: flex;
+            align-items: center;
+            margin: 0;
+
+            div#status {
+              display: flex;
+              width: 175px;
+              justify-content: space-around;
+              opacity: 0;
+
+              h3 {
+                margin: 0;
+              }
+
+              &.visible {
+                opacity: 1;
+              }
+            }
+
+            i {
+              text-align: center;
+              font-size: 2em;
+              width: 25%;
+
+              &:not(.fa-angle-down) {
+                opacity: 0;
+                pointer-events: none;
+              }
+
+              &:hover:not(.fa-angle-down) {
+                font-size: 2.2em;
+              }
+            }
+          }
+
+          input[type="text"] {
+            border: 0;
+
+            &.focused {
+              border-radius: 5px;
+              border: 1px solid #00897B;
+              box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.7);
+
+              &:focus {
+                outline: 5px auto #00897B;
+              }
+            }
+
+            &:focus {
+              color: rgba(0, 137, 123, 0.5);
+
+              &:not(.focused) {
+                -webkit-text-fill-color: rgb(0, 137, 123);
+                color: transparent;
+                outline: none;
+
+                &::placeholder {
+                    color: #00897B;
+                }
+              }
+
+              &::placeholder {
+                  color: rgba(0, 137, 123, 0.5);
+              }
+            }
+          }
+
+          &.expanded {
+            div#icons{
+              i {
+                &.fa-angle-down{
+                  transform: rotateZ(180deg);
+                }
+
+                &.fa-hashtag {
+                  &.active {
+                    text-shadow: 1px 1px #000;
+
+                    & ~ i {
+                      color: lighten(black, 30%);
+                    }
+                  }
+                }
+
+                &:not(.fa-angle-down) {
+                  opacity: 1;
+                  pointer-events: all;
+
+                  &.active {
+                    text-shadow: 1px 1px #000;
+
+                    & ~ i {
+                      color: lighten(black, 30%);
+                    }
+                  }
+                }
+              }
+            }
+
+            +div#full-post {
+              textarea.post-body {
+                opacity: 1;
+                height: 300px;
+                box-shadow: none;
+                width: 100%;
+                background: darken(white, 2%);
+                border-radius: 5px;
+
+                &:focus:not(.editing) {
+                  outline: none;
+                  color: transparent;
+                  -webkit-text-fill-color: black;
+                  border-color: black;
+                }
+
+                &.editing {
+                  pointer-events: all;
+                  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.7);
+                }
+              }
+
+              ul {
+                display: flex;
+                justify-content: space-between;
+              }
+            }
+          }
+        }
+        textarea.post-body {
+          outline-color: #00897B;
+          resize: none;
+          padding: 10px;
+          font-weight: lighter;
+          font-size: 2em;
+          opacity: 0;
+          height: 0;
+          border-color: #00897B;
+        }
+
+        ul {
+          padding: 0;
+          width: 100%;
+          display: none;
+          list-style: none;
+
+          li {
+            &.tags {
+              color: red;
+            }
+            &:not(.tags){
+              &:hover {
+                text-shadow: 1px 1px #000;
+              }
+            }
+          }
+        }
+      }
     }
 
-    div#icons {
+    div#pop-up {
+      opacity: 0.7;
+      padding: 0 20px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      width: 100px;
+      border-top-right-radius: 10px;
+      border-top-left-radius: 10px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      background: lighten(#00897B, 0%);
+      width: 100%;
+      height: 50px;
 
-      i {
-        font-size: 2em;
+      &.off {
+        display: none;
+      }
+
+      h1, i {
+        color: white;
+        font-size: 1.8em;
+      }
+
+      h1 {
+        width: 80%;
         text-align: center;
       }
     }
   }
 
-  div#posts {
-    display: flex;
-    flex-direction: column;
-    margin: 5px;
+  &#sign-up {
+    form#signup-form {
+      margin-top: 30px;
+      align-items: center;
 
-    div.post-title {
-      color: #00897B;
-      display: flex;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-
-      a {
-        color: #00897B;
-        border: none;
-        text-decoration: none;
-        background: none;
-      }
-
-      div#post-wrapper{
-        display: flex;
-
-        div#icons {
-          width: 20%;
+      div {
+        &.wrapper {
           display: flex;
           align-items: center;
-          margin: 0;
+          width: 100%;
+          height: 100px;
 
-          div#status {
-            display: flex;
-            width: 175px;
-            justify-content: space-around;
-            opacity: 0;
+          &#field {
+            justify-content: center;
 
-            h3 {
-              margin: 0;
-            }
-
-            &.visible {
-              opacity: 1;
-            }
-          }
-
-          i {
-            text-align: center;
-            font-size: 2em;
-            width: 25%;
-
-            &:not(.fa-angle-down) {
-              opacity: 0;
-              pointer-events: none;
-            }
-
-            &:hover:not(.fa-angle-down) {
-              font-size: 2.2em;
-            }
-          }
-        }
-
-        input[type="text"] {
-          color: #00897B;
-          text-indent: 0.3em;
-          width: 80%;
-          height: 65px;
-          background: none;
-          opacity: 1;
-          font-size: 2em;
-          border: 0;
-          font-weight: lighter;
-
-          &.focused {
-            border-radius: 5px;
-            border: 1px solid #00897B;
-            box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.7);
-
-            &:focus {
-              outline: 5px auto #00897B;
-            }
-          }
-
-          &:focus {
-            color: rgba(0, 137, 123, 0.5);
-
-            &:not(.focused) {
-              -webkit-text-fill-color: rgb(0, 137, 123);
-              color: transparent;
-              outline: none;
-
-              &::placeholder {
-                  color: #00897B;
-              }
-            }
-
-            &::placeholder {
-                color: rgba(0, 137, 123, 0.5);
-            }
-          }
-        }
-
-        &.expanded {
-          div#icons{
-            i {
-              &.fa-angle-down{
-                transform: rotateZ(180deg);
-              }
-
-              &.fa-hashtag {
-                &.active {
-                  text-shadow: 1px 1px #000;
-
-                  & ~ i {
-                    color: lighten(black, 30%);
-                  }
-                }
-              }
-
-              &:not(.fa-angle-down) {
-                opacity: 1;
-                pointer-events: all;
-
-                &.active {
-                  text-shadow: 1px 1px #000;
-
-                  & ~ i {
-                    color: lighten(black, 30%);
-                  }
-                }
-              }
-            }
-          }
-
-          +div#full-post {
-            textarea.post-body {
-              opacity: 1;
-              height: 300px;
-              box-shadow: none;
-              width: 100%;
-              background: darken(white, 2%);
+            input[type="text"], input[type="password"] {
+              background: white;
               border-radius: 5px;
+              border: 1px solid #00897B;
+              box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.7);
 
-              &:focus:not(.editing) {
-                outline: none;
-                color: transparent;
-                -webkit-text-fill-color: black;
-                border-color: black;
+              &:-webkit-autofill {
+                  -webkit-box-shadow: 0 0 0px 1000px white inset;
               }
 
-              &.editing {
-                pointer-events: all;
-                box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.7);
+
+              &.invalid {
+                border: 1px solid #db3236;
+                color: #db3236;
+
+                &::placeholder {
+                    color: #db3236;
+                }
+
+                &:focus {
+                  outline: 5px auto #db3236;
+
+                  &::placeholder {
+                      color: lighten(#db3236, 30%);
+                  }
+                }
+              }
+
+              &.valid {
+                border: 1px solid #3cba54;
+                color: #3cba54;
+
+                &::placeholder {
+                    color: lighten(#3cba54, 30%);
+                }
+
+                &:focus {
+                  outline: 5px auto #3cba54;
+
+                  &::placeholder {
+                      color: lighten(#3cba54, 30%);
+                  }
+                }
+              }
+
+              &:focus {
+                outline: 5px auto #00897B;
+
+                &::placeholder {
+                    color: rgba(0, 137, 123, 0.5);
+                }
               }
             }
-
-            ul {
-              display: flex;
-              justify-content: space-between;
-            }
           }
-        }
-      }
-      textarea.post-body {
-        outline-color: #00897B;
-        resize: none;
-        padding: 10px;
-        font-weight: lighter;
-        font-size: 2em;
-        opacity: 0;
-        height: 0;
-        border-color: #00897B;
-      }
 
-      ul {
-        padding: 0;
-        width: 100%;
-        display: none;
-        list-style: none;
+          &#submit {
+            justify-content: space-around;
+            width: 80%;
 
-        li {
-          &.tags {
-            color: red;
-          }
-          &:not(.tags){
-            &:hover {
-              text-shadow: 1px 1px #000;
+            input[type="submit"] {
+              color: white;
+              border: 0;
+              font-size: 2em;
+              font-weight: lighter;
+              border-radius: 10px;
+              background: #00897B;
+              width: 200px;
+              height: 50px;
+
+
+              &:hover {
+                padding-top: 3px;
+                box-shadow: 0px 3px 0px darken(#00897B, 10%);
+              }
             }
           }
         }
@@ -373,7 +506,6 @@ div.index {
     }
   }
 }
-
 
 ::placeholder {
     color: #00897B;
