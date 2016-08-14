@@ -39,7 +39,7 @@ div#allNav {
     height: 100%;
     text-align: center;
     width: 50%;
-    background: none;
+    background: solid;
     color: white;
     border: none;
     text-decoration: none;
@@ -47,7 +47,8 @@ div#allNav {
   }
 
   a:hover {
-    text-shadow: 3px 3px #000;
+    background: none;
+    text-shadow: 2px 2px #000;
   }
 
   div#fakeHeader{
@@ -513,6 +514,10 @@ div.main-container {
               height: 50px;
               pointer-events: all;
 
+              &:-webkit-autofill {
+                  -webkit-box-shadow: 0 0 0px 1000px white inset;
+              }
+
               &.inactive {
                 color: darken(white, 20%);
                 pointer-events: none;
@@ -536,12 +541,21 @@ div.main-container {
     color: #00897B;
 }
 
+input {
+      -webkit-appearance: none;
+  }
+
 @media only screen and (max-width: 640px) {
   body {
     font-size: 16px;
+
+    * {
+      font-weight: lighter;
+    }
   }
 
   div#allNav {
+    font-weight: lighter;
     height: 200px;
 
     &.shrink.wayDown div#navWrapper {
@@ -562,26 +576,44 @@ div.main-container {
     }
 
     div#navWrapper{
-      height: 200px;
+      height: 190px;
       position: absolute;
       opacity: 1;
       pointer-events: all;
+
+      a:hover {
+        background: darken(#00897B, 10%);
+      }
 
       nav {
         flex-wrap: wrap;
 
         div#home {
+          font-weight: lighter;
           display: flex;
           justify-content: center;
           align-items: center;
           width: 100%;
           height: 75px;
           background: darken(#00897B, 10%);
+
+          a:hover {
+            background: darken(#00897B, 15%);
+            width: 100%;
+            height: 100%;
+          }
         }
 
         a {
+          width: 50%;
+          text-shadow: none;
+          font-weight: lighter;
           height: 30%;
-          font-size: 1.8em;
+
+          a:hover {
+            background-color: blue;
+            text-shadow: none;
+          }
         }
       }
     }
@@ -593,7 +625,7 @@ div.main-container {
 
       h1 {
         margin: 0px 20px 0px 20px;
-        font-size: 2em;
+        font-size: 1.5em;
       }
 
       div#mask {
@@ -781,6 +813,7 @@ div.main-container {
       margin: 0;
 
       div.container-header {
+        font-size: 0.8em;
         margin-left: 30px;
       }
 
