@@ -182,7 +182,7 @@ class SignUp extends Component {
           </div>
           <div className="wrapper" id="submit">
             <input type="submit" className={fieldsAreEmpty} value="Submit" />
-            <input type="submit" className={fieldsAreEmpty} onClick={this.clearFields} value="Clear all" />
+            <input type="submit" className={fieldsAreEmpty} onClick={this.clearFields} value="Clear" />
           </div>
         </form>
       );
