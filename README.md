@@ -1,6 +1,5 @@
-# Maui's Blog
-
-I created an interface to create, update, and delete posts (CRUD). I deviated from the requirements in one aspect:
-  - I mergerd all parts of the CRUD interface into one route
-
-In the end the navigation bar doesn't actually link anywhere but I didn't remove it because I liked the css behavior I gave it. So it's more of a dummy header to allow for future functionality.
+# Authentication
+I created the last part of the back end of this blog web app. Now people need to sign up or log in before being able to see the posts,
+and the browser remembers the users. For the extra credit part, I created an extra layer of security and privacy by disabling editing,
+deleting, and updating for posts that weren't created by that user. The posts that one are blocked appear with italicized title and inc
+case the user attempts to bypass it, it triggers a message to nottify the user he or she isn't authorized to make such requests.
