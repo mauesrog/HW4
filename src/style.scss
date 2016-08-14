@@ -675,70 +675,10 @@ input {
       }
 
       div#mask {
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        position: fixed;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        pointer-events: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &.active {
-          opacity: 1;
-          pointer-events: all;
-        }
-
         div#hashtag-prompt {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-          align-items: center;
-          background: white;
-          color: #00897B;
-          width: 300px;
-          height: 200px;
-          border-radius: 5px;
-
-          div#icons {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            i {
-            width: 40px;
-            text-align: center;
-
-            &:hover {
-              text-shadow: 1px 1px #000;
-            }
-          }
-          }
-
           div#actual-prompt {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            text-align: center;
-            height: 80%;
-            width: 80%;
-
-            div#headings {
-              h1, h4 {
-                margin: 0;
-              }
-            }
-
-            textarea{
-              outline-color: #00897B;
-              border-color: #00897B;
-              resize: none;
-              border-radius: 5px;
-              padding: 10px;
-              font-weight: lighter;
-              height: 50%;
+            textarea {
+              font-size: 16px;
             }
           }
         }

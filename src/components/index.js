@@ -78,12 +78,10 @@ class Index extends Component {
 
     const hashtagInput = document.getElementById('actual-prompt').getElementsByTagName('textarea')[0];
 
-    if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-      if (this.state.hashtagClass !== 'fa fa-hashtag') {
-        hashtagInput.blur();
-      } else {
-        hashtagInput.focus();
-      }
+    if (this.state.hashtagClass !== 'fa fa-hashtag') {
+      hashtagInput.blur();
+    } else {
+      hashtagInput.focus();
     }
 
     this.setState({
