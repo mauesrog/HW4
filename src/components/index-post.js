@@ -24,7 +24,7 @@ class IndexPost extends Component {
         this.props.onExpandedPost('');
         state.postClass = '';
         state.content = null;
-        postTitle.className = '';
+        postTitle.className = this.props.locked ? 'locked' : '';
       } else {
         this.props.onExpandedPost(this.props.id);
         state.postClass = 'expanded';
@@ -110,13 +110,15 @@ class IndexPost extends Component {
   }
 
   render() {
-    const className = this.props.autoFocus ? 'focused' : '';
+    let className = this.props.autoFocus ? 'focused' : '';
     const title = this.props.title ? this.props.title : 'New post';
     let editingClass = this.props.editContentClass === 'post-body editing' ? 'fa fa-check active' : 'fa fa-pencil-square-o';
     let deleteClass = this.props.editContentClass === 'post-body editing' ? 'fa fa-trash shadowed' : 'fa fa-trash';
     let hashtagClass = this.props.editContentClass === 'post-body editing' ? `${this.props.hashtagClass} shadowed` : `${this.props.hashtagClass}`;
 
     if (this.props.locked) {
+      className += ' locked';
+
       if (editingClass.indexOf('shadowed') < 0) {
         editingClass += ' shadowed';
       }
