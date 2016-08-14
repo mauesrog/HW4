@@ -59,12 +59,19 @@ class NavBar extends Component {
     return (
       <div id="allNav" className={this.state.allNavClass}>
         <div id="fakeHeader">
+          <div id="menu">
+            <Link to="/signin">Sign in</Link>
+            <Link to="/signup">Sign up</Link>
+            <Link to="/signout">Sign out</Link>
+          </div>
           <Link to="/">{"Maui's Blog"}</Link>
           <Link to="/posts/new">New post</Link>
         </div>
         <div id="navWrapper">
           <nav>
-            <Link to="/">{"Maui's Blog"}</Link>
+            <div id="home">
+              <Link to="/">{"Maui's Blog"}</Link>
+            </div>
             <Link to="/posts/new">New post</Link>
             <Link to="/signin">Sign in</Link>
             <Link to="/signup">Sign up</Link>

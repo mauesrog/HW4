@@ -34,6 +34,8 @@ class SignUp extends Component {
     this.getContent = this.getContent.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
     this.onFieldClick = this.onFieldClick.bind(this);
+    this.clearFields = this.clearFields.bind(this);
+    this.fieldsEmpty = this.fieldsEmpty.bind(this);
   }
 
   componentDidMount(props) {
@@ -128,6 +130,7 @@ class SignUp extends Component {
 
   getContent() {
     let passwordPlaceholder, confirmPasswordPlaceholder;
+    const fieldsAreEmpty = this.fieldsEmpty() ? 'inactive' : 'active';
 
     if (this.state.emailPlaceholder === 'Loading...') {
       passwordPlaceholder = 'Loading...';
@@ -178,12 +181,26 @@ class SignUp extends Component {
             />
           </div>
           <div className="wrapper" id="submit">
-            <input type="submit" value="Submit" />
-            <input type="submit" value="Clear all" />
+            <input type="submit" className={fieldsAreEmpty} value="Submit" />
+            <input type="submit" className={fieldsAreEmpty} onClick={this.clearFields} value="Clear all" />
           </div>
         </form>
       );
     }
+  }
+
+  fieldsEmpty() {
+    return this.state.email.trim() === this.state.password.trim() && this.state.confirmPassword.trim() === '' && this.state.confirmPassword.trim() === this.state.password.trim();
+  }
+
+  clearFields(e) {
+    e.preventDefault();
+
+    this.setState({
+      email: '',
+      password: '',
+      confirmPassword: '',
+    });
   }
 
   render() {
@@ -191,9 +208,6 @@ class SignUp extends Component {
       <div className="main-container" id="sign-up">
         <div className="container-header">
           <h1>Sign up</h1>
-          <div id="icons">
-            <i className="fa fa-plus" aria-hidden="true" />
-          </div>
         </div>
         {this.getContent()}
         <div

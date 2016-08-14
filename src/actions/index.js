@@ -67,7 +67,7 @@ export function fetchPost(id) {
 
 export function createPost(post) {
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/posts/${API_KEY}`, post)
+    axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
     .then(response => {
       if (response.data.error) {
         dispatch({ type: ActionTypes.CREATE_POST, error: response.data.error });
@@ -84,7 +84,7 @@ export function createPost(post) {
 
 export function updatePost(id, put) {
   return (dispatch) => {
-    axios.put(`${ROOT_URL}/posts/${id}${API_KEY}`, put)
+    axios.put(`${ROOT_URL}/posts/${id}`, put, { headers: { authorization: localStorage.getItem('token') } })
     .then(response => {
       dispatch({ type: ActionTypes.UPDATE_POST, response });
       if (typeof put.tags !== 'undefined') {
@@ -99,7 +99,7 @@ export function updatePost(id, put) {
 
 export function deletePost(id) {
   return (dispatch) => {
-    axios.delete(`${ROOT_URL}/posts/${id}${API_KEY}`)
+    axios.delete(`${ROOT_URL}/posts/${id}`, { headers: { authorization: localStorage.getItem('token') } })
     .then(response => {
       dispatch({ type: ActionTypes.DELETE_POST, response });
       fetchPosts(true)(dispatch);
@@ -112,7 +112,7 @@ export function deletePost(id) {
 
 export function clearPosts() {
   return (dispatch) => {
-    axios.delete(`${ROOT_URL}/posts/${API_KEY}`)
+    axios.delete(`${ROOT_URL}/posts/`, { headers: { authorization: localStorage.getItem('token') } })
     .then(response => {
       dispatch({ type: ActionTypes.CLEAR_POSTS, response });
       fetchPosts(true)(dispatch);
@@ -164,6 +164,42 @@ export function signupUser(user) {
     .catch(error => {
       dispatch(authError(`Sign Up Failed: ${error}`));
     });
+  };
+}
+
+export function signinUser(user) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/signin`, user)
+    .then(response => {
+      console.log(response);
+      if (response.data.error) {
+        dispatch(authError(`Sign in Failed: ${response.data.error.errmsg}`));
+      } else {
+        const token = response.data.token;
+
+        localStorage.setItem('token', token);
+        console.log(token);
+        dispatch({ type: ActionTypes.AUTH_USER });
+      }
+    })
+    .catch(error => {
+      dispatch(authError(`Sign in Failed: ${error}`));
+    });
+  };
+}
+
+
+export function signoutUser(user) {
+  return (dispatch) => {
+    if (localStorage.token) {
+      localStorage.removeItem('token');
+    }
+
+    if (localStorage.signup) {
+      localStorage.removeItem('signup');
+    }
+
+    dispatch({ type: ActionTypes.DEAUTH_USER });
   };
 }
 

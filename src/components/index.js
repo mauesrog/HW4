@@ -8,6 +8,7 @@ import {
   updatePost,
   deletePost,
   fetchPost,
+  signoutUser,
 } from '../actions';
 
 const mapStateToProps = (state) => (
@@ -47,7 +48,9 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchPosts(true);
+    if (localStorage.token) {
+      this.props.fetchPosts(true);
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -57,13 +60,7 @@ class Index extends Component {
       if (path === '/posts/new') {
         this.createNewPost();
       } else {
-        if (localStorage.token) {
-          localStorage.removeItem('token');
-
-          if (localStorage.signup) {
-            localStorage.removeItem('signup');
-          }
-        }
+        this.props.signoutUser();
       }
 
       this.props.history.push('/');
@@ -151,7 +148,7 @@ class Index extends Component {
   }
 
   getPosts() {
-    if (this.props.validated) {
+    if (this.props.validated && localStorage.token) {
       return (
         <div className="container-content" id="posts">
           {this.props.all.map((el, i, arr) => {
@@ -179,7 +176,13 @@ class Index extends Component {
         </div>
       );
     } else {
-      const message = this.props.message ? this.props.message : this.state.initialMessage;
+      let message;
+
+      if (localStorage.token) {
+        message = this.props.message ? this.props.message : this.state.initialMessage;
+      } else {
+        message = 'Please sign in or sign up to view posts!';
+      }
 
       return (
         <h1>{message}</h1>
@@ -244,10 +247,10 @@ class Index extends Component {
                   this.props.clearPosts();
                 }
               }}
-              className={this.props.all.length ? 'fa fa-ban' : 'fa fa-ban shadowed'}
+              className={this.props.all.length && localStorage.token ? 'fa fa-ban' : 'fa fa-ban shadowed'}
               aria-hidden="true"
             />
-            <i onClick={this.createNewPost} className="fa fa-plus" aria-hidden="true" />
+            <i onClick={this.createNewPost} className={localStorage.token ? 'fa fa-plus' : 'fa fa-plus shadowed'} aria-hidden="true" />
           </div>
         </div>
         {this.getPosts()}
@@ -292,4 +295,5 @@ export default connect(mapStateToProps, {
   deletePost,
   fetchPost,
   clearPosts,
+  signoutUser,
 })(Index);

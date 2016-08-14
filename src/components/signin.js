@@ -32,6 +32,8 @@ class SignIn extends Component {
     this.getContent = this.getContent.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
     this.onFieldClick = this.onFieldClick.bind(this);
+    this.clearFields = this.clearFields.bind(this);
+    this.fieldsEmpty = this.fieldsEmpty.bind(this);
   }
 
   componentDidMount(props) {
@@ -71,7 +73,7 @@ class SignIn extends Component {
       newState.passwordClass = 'valid';
     }
 
-    if (newState.emailClass === newState.passwordClass && newState.emailClass === 'valid') {
+    if (newState.emailClass === 'valid' && newState.emailClass === newState.passwordClass) {
       this.props.signinUser({
         email: this.state.email,
         password: this.state.password,
@@ -119,7 +121,8 @@ class SignIn extends Component {
   }
 
   getContent() {
-    let passwordPlaceholder;
+    let passwordPlaceholder, confirmPasswordPlaceholder;
+    const fieldsAreEmpty = this.fieldsEmpty() ? 'inactive' : 'active';
 
     if (this.state.emailPlaceholder === 'Loading...') {
       passwordPlaceholder = 'Loading...';
@@ -130,7 +133,7 @@ class SignIn extends Component {
       return <h1>Hello</h1>;
     } else {
       return (
-        <form onSubmit={this.onSubmit} className="container-content" id="signup-form">
+        <form onSubmit={this.onSubmit} className="container-content" id="signin-form">
           <div className="wrapper" id="field">
             <input
               type="text"
@@ -139,7 +142,7 @@ class SignIn extends Component {
               onChange={e => { this.onFieldChange(e, 'email'); }}
               onClick={this.onFieldClick}
               onKeyDown={this.onFieldClick}
-              placeholder={this.props.auth.error ? 'Email already taken' : this.state.emailPlaceholder}
+              placeholder={this.props.auth.error ? 'Email not found' : this.state.emailPlaceholder}
               className={this.props.auth.error ? 'invalid' : this.state.emailClass}
             />
           </div>
@@ -156,29 +159,39 @@ class SignIn extends Component {
             />
           </div>
           <div className="wrapper" id="submit">
-            <input type="submit" value="Submit" />
-            <input type="submit" value="Clear all" />
+            <input type="submit" className={fieldsAreEmpty} value="Submit" />
+            <input type="submit" className={fieldsAreEmpty} onClick={this.clearFields} value="Clear all" />
           </div>
         </form>
       );
     }
   }
 
+  fieldsEmpty() {
+    return this.state.email.trim() === this.state.password.trim() && this.state.password.trim() === '';
+  }
+
+  clearFields(e) {
+    e.preventDefault();
+
+    this.setState({
+      email: '',
+      password: '',
+    });
+  }
+
   render() {
     return (
-      <div className="main-container" id="sign-up">
+      <div className="main-container" id="sign-in">
         <div className="container-header">
           <h1>Sign in</h1>
-          <div id="icons">
-            <i className="fa fa-plus" aria-hidden="true" />
-          </div>
         </div>
         {this.getContent()}
         <div
           id="mask"
           className=" "
         >
-          <div id="sign-up-prompt">
+          <div id="sign-in-prompt">
             <div id="icons">
             </div>
             <div id="actual-prompt">
