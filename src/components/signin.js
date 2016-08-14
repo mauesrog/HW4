@@ -75,7 +75,7 @@ class SignIn extends Component {
 
     if (newState.emailClass === 'valid' && newState.emailClass === newState.passwordClass) {
       this.props.signinUser({
-        email: this.state.email,
+        email: this.state.email.toLowerCase(),
         password: this.state.password,
       });
 
@@ -124,10 +124,14 @@ class SignIn extends Component {
     let passwordPlaceholder, confirmPasswordPlaceholder;
     const fieldsAreEmpty = this.fieldsEmpty() ? 'inactive' : 'active';
 
-    if (this.state.emailPlaceholder === 'Loading...') {
-      passwordPlaceholder = 'Loading...';
+    if (this.props.auth.error) {
+      passwordPlaceholder = 'Invalid combination.';
     } else {
-      passwordPlaceholder = this.state.passwordClass === 'invalid' ? 'Invalid password' : 'Password';
+      if (this.state.emailPlaceholder === 'Loading...') {
+        passwordPlaceholder = 'Loading...';
+      } else {
+        passwordPlaceholder = this.state.passwordClass === 'invalid' ? 'Invalid password' : 'Password';
+      }
     }
     if (this.props.auth.authenticated) {
       return <h1>Hello</h1>;
@@ -142,7 +146,7 @@ class SignIn extends Component {
               onChange={e => { this.onFieldChange(e, 'email'); }}
               onClick={this.onFieldClick}
               onKeyDown={this.onFieldClick}
-              placeholder={this.props.auth.error ? 'Email not found' : this.state.emailPlaceholder}
+              placeholder={this.props.auth.error ? 'Invalid combination.' : this.state.emailPlaceholder}
               className={this.props.auth.error ? 'invalid' : this.state.emailClass}
             />
           </div>
@@ -154,8 +158,8 @@ class SignIn extends Component {
               onChange={e => { this.onFieldChange(e, 'password'); }}
               onClick={this.onFieldClick}
               onKeyDown={this.onFieldClick}
-              placeholder={this.props.auth.error ? 'Password' : passwordPlaceholder}
-              className={this.props.auth.error ? 'normal' : this.state.passwordClass}
+              placeholder={passwordPlaceholder}
+              className={this.props.auth.error ? 'invalid' : this.state.passwordClass}
             />
           </div>
           <div className="wrapper" id="submit">

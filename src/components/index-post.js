@@ -66,17 +66,33 @@ class IndexPost extends Component {
             <li key={`empty-${this.props.id}`} />,
           ]}
         </ul>),
+        (<ul key={`author-${this.props.id}`}>
+          {[
+            <li className="tags" key={`${this.props.id}-author-li`}>Author:</li>,
+            <li key={`${this.props.id}-author-li-name`}>{this.props.author}</li>,
+            <li key={`empty-${this.props.id}`} />,
+          ]}
+        </ul>),
       ];
     } else {
-      finalBody = (<textarea
-        id={`post-body-${this.props.id}`}
-        key={`post-body-${this.props.id}`}
-        className={this.props.editContentClass}
-        onClick={e => { if (e.target.className.indexOf('editing') < 0) { e.target.blur(); } }}
-        placeholder="Edit to add content"
-        value={this.state.content !== null ? this.state.content : this.getContent()}
-        onChange={e => { this.setState({ content: e.target.value }); }}
-      / >);
+      finalBody = [
+        (<textarea
+          id={`post-body-${this.props.id}`}
+          key={`post-body-${this.props.id}`}
+          className={this.props.editContentClass}
+          onClick={e => { if (e.target.className.indexOf('editing') < 0) { e.target.blur(); } }}
+          placeholder="Edit to add content"
+          value={this.state.content !== null ? this.state.content : this.getContent()}
+          onChange={e => { this.setState({ content: e.target.value }); }}
+        / >),
+        (<ul key={`author-${this.props.id}`}>
+          {[
+            <li className="tags" key={`${this.props.id}-author-li`}>Author:</li>,
+            <li key={`${this.props.id}-author-li-name`}>{this.props.author}</li>,
+            <li key={`empty-${this.props.id}`} />,
+          ]}
+        </ul>),
+      ];
     }
 
     return <div id="full-post">{finalBody}</div>;
@@ -96,6 +112,23 @@ class IndexPost extends Component {
   render() {
     const className = this.props.autoFocus ? 'focused' : '';
     const title = this.props.title ? this.props.title : 'New post';
+    let editingClass = this.props.editContentClass === 'post-body editing' ? 'fa fa-check active' : 'fa fa-pencil-square-o';
+    let deleteClass = this.props.editContentClass === 'post-body editing' ? 'fa fa-trash shadowed' : 'fa fa-trash';
+    let hashtagClass = this.props.editContentClass === 'post-body editing' ? `${this.props.hashtagClass} shadowed` : `${this.props.hashtagClass}`;
+
+    if (this.props.locked) {
+      if (editingClass.indexOf('shadowed') < 0) {
+        editingClass += ' shadowed';
+      }
+
+      if (deleteClass.indexOf('shadowed') < 0) {
+        deleteClass += ' shadowed';
+      }
+
+      if (hashtagClass.indexOf('shadowed') < 0) {
+        hashtagClass += ' shadowed';
+      }
+    }
 
     return (
       <div className="post-title" id={`title-${this.props.id}`} key={this.props.id} >
@@ -113,19 +146,22 @@ class IndexPost extends Component {
           />
           <div id="icons">
             <i
-              className={this.props.editContentClass === 'post-body editing' ? `${this.props.hashtagClass} shadowed` : `${this.props.hashtagClass}`}
+              id={`hashtag-icon-${this.props.id}`}
+              className={hashtagClass}
               aria-hidden="true"
-              onClick={e => { this.props.onHashtags(e, this.props.id, this.props.currentPost.tags); }}
+              onClick={e => { this.props.onHashtags(e, this.props.id, this.props.currentPost.tags, this.props.author); }}
             />
             <i
-              className={this.props.editContentClass === 'post-body editing' ? 'fa fa-trash shadowed' : 'fa fa-trash'}
+              id={`delete-icon-${this.props.id}`}
+              className={deleteClass}
               aria-hidden="true"
-              onClick={() => { this.props.deletePost(this.props.id); }}
+              onClick={(e) => { this.props.deletePost(this.props.id, this.props.author, e); }}
             />
             <i
-              className={this.props.editContentClass === 'post-body editing' ? 'fa fa-check active' : 'fa fa-pencil-square-o'}
+              id={`editing-icon-${this.props.id}`}
+              className={editingClass}
               aria-hidden="true"
-              onClick={e => { this.props.onEditContent(this.props.id, e); }}
+              onClick={e => { this.props.onEditContent(this.props.id, this.props.author, e); }}
             />
             <i className="fa fa-angle-down" aria-hidden="true" />
           </div>

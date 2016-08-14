@@ -14,10 +14,12 @@ import {
 const mapStateToProps = (state) => (
   {
     all: state.posts.all,
+    user: state.posts.user,
     validated: state.posts.validated,
     message: state.posts.message,
     updated: state.posts.updated,
     post: state.posts.post,
+    auth: state.auth,
   }
 );
 // example class based component (smart component)
@@ -45,6 +47,7 @@ class Index extends Component {
     this.onHashtags = this.onHashtags.bind(this);
     this.onGetDataPost = this.onGetDataPost.bind(this);
     this.onExpandedPost = this.onExpandedPost.bind(this);
+    this.deletePost = this.deletePost.bind(this);
   }
 
   componentDidMount() {
@@ -73,34 +76,52 @@ class Index extends Component {
     }
   }
 
-  onHashtags(e, currentId, currentTags) {
+  onHashtags(e, currentId, currentTags, author) {
     e.stopPropagation();
 
     const hashtagInput = document.getElementById('actual-prompt').getElementsByTagName('textarea')[0];
+    const hashtagClass = document.getElementById(`hashtag-icon-${currentId}`).className;
+    let popUpClass, popUpText, hashtagNewClass;
 
-    if (this.state.hashtagClass !== 'fa fa-hashtag') {
-      hashtagInput.blur();
+    if (hashtagClass.indexOf('shadowed') > -1) {
+      popUpClass = 'locked';
+      popUpText = `This post is locked! It was created by ${author}.`;
+      hashtagNewClass = this.state.hashtagClass;
     } else {
-      hashtagInput.focus();
+      popUpClass = this.state.popUpClass;
+      popUpText = this.state.popUpText;
+      hashtagNewClass = this.state.hashtagClass === 'fa fa-hashtag' ? 'fa fa-hashtag active' : 'fa fa-hashtag';
+
+      if (this.state.hashtagClass !== 'fa fa-hashtag') {
+        hashtagInput.blur();
+      } else {
+        hashtagInput.focus();
+      }
     }
 
     this.setState({
       currentId,
       currentTags,
-      hashtagClass: this.state.hashtagClass === 'fa fa-hashtag' ? 'fa fa-hashtag active' : 'fa fa-hashtag',
+      popUpClass,
+      popUpText,
+      hashtagClass: hashtagNewClass,
     });
   }
 
-  onEditContent(id, event) {
+  onEditContent(id, author, event) {
     event.stopPropagation();
 
     const currentPost = document.getElementById(`post-body-${id}`);
     const currentPostTitle = document.getElementById(`title-${id}`).getElementsByTagName('input')[0];
+    const editingClass = document.getElementById(`editing-icon-${id}`).className;
     const state = { editContentClass: 'post-body' };
 
     this.props.fetchPost(id);
 
-    if (this.state.editContentClass.indexOf('editing') < 0) {
+    if (editingClass.indexOf('shadowed') > -1) {
+      state.popUpClass = 'locked';
+      state.popUpText = `This post is locked! It was created by ${author}.`;
+    } else if (this.state.editContentClass.indexOf('editing') < 0) {
       state.editContentClass += ' editing';
       currentPostTitle.className = 'focused';
       currentPost.focus();
@@ -162,10 +183,12 @@ class Index extends Component {
                 onHashtags={this.onHashtags}
                 key={el.id}
                 id={el.id}
+                author={el.author}
+                locked={el.locked}
                 expandedPostId={this.state.expandedPostId}
                 onExpandedPost={this.onExpandedPost}
                 title={el.title}
-                deletePost={this.props.deletePost}
+                deletePost={this.deletePost}
                 currentPost={this.props.post}
                 onEditContent={this.onEditContent}
                 getDataPost={this.onGetDataPost}
@@ -189,6 +212,22 @@ class Index extends Component {
       );
     }
   }
+
+  deletePost(id, author, e) {
+    const deleteClass = document.getElementById(`delete-icon-${id}`).className;
+
+    if (deleteClass.indexOf('shadowed') > -1) {
+      e.stopPropagation();
+
+      this.setState({
+        popUpClass: 'locked',
+        popUpText: `This post is locked! It was created by ${author}.`,
+      });
+    } else {
+      this.props.deletePost(id);
+    }
+  }
+
 
   createNewPost(event) {
     this.props.createPost({
@@ -227,7 +266,6 @@ class Index extends Component {
 
       if (trimmedTags.length) {
         trimmedTags = trimmedTags.replace(/ {2,}/g, ' ');
-        console.log(trimmedTags);
       }
       return trimmedTags;
     }
@@ -236,15 +274,29 @@ class Index extends Component {
   }
 
   render() {
+    let popUpText, popUpClass;
+
+    console.log(this.props);
+
+    if (this.state.popUpText) {
+      popUpText = this.state.popUpText;
+      popUpClass = this.state.popUpClass;
+    } else {
+      popUpText = localStorage.signup ? localStorage.signup : '';
+      popUpClass = localStorage.signup ? '' : this.state.popUpClass;
+    }
     return (
       <div className="main-container" id="index">
         <div className="container-header">
+          <div className="welcome">
+            <h1>{localStorage.getItem('email') ? `Welcome back, ${localStorage.getItem('email')}` : 'Hello!'}</h1>
+          </div>
           <h1>Posts</h1>
           <div id="icons">
             <i
               onClick={(e) => {
                 if (e.target.className.indexOf('shadowed') < 0) {
-                  this.props.clearPosts();
+                  this.props.clearPosts(this.props.user.replace(/\./g, '[').replace(/@/g, ']'));
                 }
               }}
               className={this.props.all.length && localStorage.token ? 'fa fa-ban' : 'fa fa-ban shadowed'}
@@ -279,9 +331,9 @@ class Index extends Component {
             </div>
           </div>
         </div>
-        <div id="pop-up" className={localStorage.signup ? '' : this.state.popUpClass}>
-          <h1>{localStorage.signup ? localStorage.signup : ''}</h1>
-          <i className="fa fa-times" aria-hidden="true" onClick={() => { localStorage.removeItem('signup'); this.setState({ popUpClass: 'off' }); }} />
+        <div id="pop-up" className={popUpClass}>
+          <h1>{popUpText}</h1>
+          <i className="fa fa-times" aria-hidden="true" onClick={() => { localStorage.removeItem('signup'); this.setState({ popUpText: '', popUpClass: 'off' }); }} />
         </div>
       </div>
     );

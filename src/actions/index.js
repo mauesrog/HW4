@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const ROOT_URL = 'https://maui-blog-auth.herokuapp.com/api';
-// const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'https://maui-blog-auth.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
 const API_KEY = '?key=ha8f7an2387rh210fb10fbpq3bfa913r8';
 
 export const ActionTypes = {
@@ -21,19 +21,22 @@ export const ActionTypes = {
 
 export function fetchPosts(updated) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts/${API_KEY}`)
+    axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
     .then(response => {
       const payload = {
         all: [],
         message: '',
         validated: false,
+        user: '',
         updated,
       };
 
-      if (!response.data[0]) {
+      payload.user = response.data.user;
+
+      if (!response.data.posts[0]) {
         payload.message = 'No posts available';
       } else {
-        payload.all = response.data;
+        payload.all = response.data.posts;
         payload.validated = true;
       }
 
@@ -47,7 +50,7 @@ export function fetchPosts(updated) {
 
 export function fetchPost(id) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts/${id}${API_KEY}`)
+    axios.get(`${ROOT_URL}/posts/${id}`, { headers: { authorization: localStorage.getItem('token') } })
     .then(response => {
       const payload = {
         post: null,
@@ -66,9 +69,11 @@ export function fetchPost(id) {
 }
 
 export function createPost(post) {
+  console.log(post);
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
     .then(response => {
+      console.log(response);
       if (response.data.error) {
         dispatch({ type: ActionTypes.CREATE_POST, error: response.data.error });
       } else {
@@ -110,9 +115,9 @@ export function deletePost(id) {
   };
 }
 
-export function clearPosts() {
+export function clearPosts(email) {
   return (dispatch) => {
-    axios.delete(`${ROOT_URL}/posts/`, { headers: { authorization: localStorage.getItem('token') } })
+    axios.delete(`${ROOT_URL}/posts/clear/${email}`, { headers: { authorization: localStorage.getItem('token') } })
     .then(response => {
       dispatch({ type: ActionTypes.CLEAR_POSTS, response });
       fetchPosts(true)(dispatch);
@@ -155,8 +160,10 @@ export function signupUser(user) {
         dispatch(authError(`Sign Up Failed: ${response.data.error.errmsg}`));
       } else {
         const token = response.data.token;
+        const email = response.data.email;
 
         localStorage.setItem('token', token);
+        localStorage.setItem('email', email);
         console.log(token);
         dispatch({ type: ActionTypes.AUTH_USER });
       }
@@ -176,8 +183,10 @@ export function signinUser(user) {
         dispatch(authError(`Sign in Failed: ${response.data.error.errmsg}`));
       } else {
         const token = response.data.token;
+        const email = response.data.email;
 
         localStorage.setItem('token', token);
+        localStorage.setItem('email', email);
         console.log(token);
         dispatch({ type: ActionTypes.AUTH_USER });
       }
@@ -193,6 +202,7 @@ export function signoutUser(user) {
   return (dispatch) => {
     if (localStorage.token) {
       localStorage.removeItem('token');
+      localStorage.removeItem('email');
     }
 
     if (localStorage.signup) {

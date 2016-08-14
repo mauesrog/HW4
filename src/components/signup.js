@@ -80,7 +80,7 @@ class SignUp extends Component {
 
     if (newState.confirmPasswordClass === newState.passwordClass && newState.emailClass === 'valid' && newState.emailClass === newState.passwordClass) {
       this.props.signupUser({
-        email: this.state.email,
+        email: this.state.email.toLowerCase(),
         password: this.state.password,
       });
 

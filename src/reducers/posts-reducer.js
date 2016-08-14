@@ -26,6 +26,7 @@ function PostsReducer(state = defualtPosts, action) {
           message: action.payload.message,
           validated: action.payload.validated,
           updated: action.payload.updated,
+          user: action.payload.user,
         });
       }
 
