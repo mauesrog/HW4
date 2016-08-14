@@ -577,7 +577,7 @@ input {
 
     div.container-header {
       width: 100%;
-      margin-left: 100px;
+      margin: 0 100px;
     }
 
     .container-content {
@@ -754,6 +754,7 @@ input {
 
       div#posts {
         margin: 0;
+        width: 100%;
 
         div.post-title {
           div#post-wrapper{
