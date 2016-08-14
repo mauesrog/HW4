@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'https://maui-blog-auth.herokuapp.com/api';
-const ROOT_URL = 'http://localhost:9090/api';
-const API_KEY = '?key=ha8f7an2387rh210fb10fbpq3bfa913r8';
+const ROOT_URL = 'https://maui-blog-auth.herokuapp.com/api';
+// const ROOT_URL = 'http://localhost:9090/api';
 
 export const ActionTypes = {
   FETCH_POSTS: 'FETCH_POSTS',
@@ -129,27 +128,6 @@ export function clearPosts(email) {
 }
 
 // USER ACTIONS
-
-export function fetchUserData(id) {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts/${id}${API_KEY}`)
-    .then(response => {
-      const payload = {
-        user: null,
-      };
-
-      if (response.data) {
-        payload.user = response.user;
-      }
-
-      dispatch({ type: ActionTypes.FETCH_USER_DATA, payload });
-    })
-    .catch(error => {
-      console.log(error);
-    });
-  };
-}
-
 
 export function signupUser(user) {
   return (dispatch) => {
